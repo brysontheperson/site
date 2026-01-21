@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" data-theme="classlink">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Frosty's Game Lib</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" />
+
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; }
+
+    .card-hover { transition: transform .18s ease, box-shadow .18s ease; }
+    .card-hover:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    }
+
+    .thumb {
+      height:120px;
+      width:100%;
+      object-fit:cover;
+      border-radius:8px;
+      background:#111;
+    }
+
+    html[data-theme="classlink"] {
+      --b1:#eaf4ff;
+      --b2:#cfe7ff;
+      --b3:#9fcfff;
+      --bc:#042a55;
+    }
+
+    html[data-theme="classlink-dark"] {
+      --b1:#0a1f33;
+      --b2:#143a5e;
+      --b3:#1f4f80;
+      --bc:#a8d8ff;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-base-content">
+
+<header class="navbar bg-base-300 sticky top-0 z-50 shadow-md">
+  <div class="flex-1">
+    <span class="text-xl font-bold ml-2">Frosty's Game Lib</span>
+    <div class="hidden sm:flex ml-4 space-x-2">
+      <button class="btn btn-ghost btn-sm" data-tab="games">Games</button>
+      <button class="btn btn-ghost btn-sm" data-tab="websites">Websites</button>
+      <button class="btn btn-ghost btn-sm" data-tab="movies">Movies/TV 📺</button>
+      <button class="btn btn-ghost btn-sm" data-tab="pr0x">Pr0x</button>
+    </div>
+  </div>
+
+  <div class="flex-none gap-2">
+    <input id="search" type="text" placeholder="Search..." class="input input-sm input-bordered" />
+    <select id="themeSelect" class="select select-sm select-bordered">
+      <option value="classlink">Classlink</option>
+      <option value="classlink-dark">Classlink Dark</option>
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+    </select>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-6">
+
+<section id="landing" class="text-center mt-12 bg-base-200 p-10 rounded-2xl shadow-lg">
+  <h1 class="text-4xl font-extrabold mb-4">Welcome</h1>
+  <button id="startBtn" class="btn btn-primary btn-lg">Start</button>
+</section>
+
+<section id="library" class="mt-10 hidden">
+  <div class="tabs mb-6">
+    <a class="tab tab-lifted tab-active" data-tab="games">Games</a>
+    <a class="tab tab-lifted" data-tab="websites">Websites</a>
+    <a class="tab tab-lifted" data-tab="movies">Movies/TV 📺</a>
+    <a class="tab tab-lifted" data-tab="pr0x">Pr0x</a>
+  </div>
+
+  <div id="pane-games" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  <div id="pane-websites" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  <div id="pane-movies" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  <div id="pane-pr0x" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+</section>
+
+</main>
+
+<script>
+function openInBlank(url,title){
+  const w=window.open('about:blank','_blank');
+  if(!w)return;
+  w.document.write(`
+    <html><body style="margin:0;background:black">
+    <object data="${url}" style="width:100vw;height:100vh;border:0"></object>
+    </body></html>
+  `);
+  w.document.close();
+}
+
+function makeCard(title,url){
+  const c=document.createElement('div');
+  c.className='card bg-base-200 p-3 card-hover cursor-pointer';
+  c.innerHTML=`
+    <img class="thumb mb-2" src="https://dummyimage.com/600x400/222/fff&text=${encodeURIComponent(title)}">
+    <h3 class="font-semibold">${title}</h3>
+    <p class="text-xs opacity-60">${url}</p>`;
+  c.onclick=()=>openInBlank(url,title);
+  return c;
+}
+
+/* DATA */
+const GAMES=[
+  {name:"Retro Bowl",url:"https://1xretro.pages.dev/"},
+  {name:"Krunker",url:"https://krunker.io/"},
+  {name:"Agar.io",url:"https://agar.io/"},
+  {name:"Slither.io",url:"https://slither.io/"},
+  {name:"Smash Karts",url:"https://smashkarts.io/"},
+  {name:"Cookie Clicker",url:"https://orteil.dashnet.org/cookieclicker/"},
+  {name:"2048",url:"https://gabrielecirulli.github.io/2048/"}
+];
+
+const WEBSITES=[
+  {name:"Pluto TV",url:"https://pluto.tv"},
+  {name:"Kick",url:"https://kick.com"}
+];
+
+const PR0X=[
+  {name:"Ethereal",url:"https://etherealproxy.netlify.app/"}
+];
+
+const MOVIES=[
+  {name:"XPrime Today",url:"https://xprime.today/"},
+  {name:"XPrime TV",url:"https://xprime.tv/"},
+  {name:"VeloraTV",url:"https://veloratv.ru/"},
+  {name:"456Movie",url:"https://456movie.net/"},
+  {name:"345Movie",url:"https://345movie.net/home"},
+  {name:"Spenflix",url:"https://spenflix.ru/"},
+  {name:"Flixy",url:"https://flixy.watch/"},
+  {name:"Hexa",url:"https://hexa.watch/"},
+  {name:"Vidora",url:"https://watch.vidora.su/"}
+];
+
+function render(id,list){
+  const p=document.getElementById(id);
+  p.innerHTML='';
+  list.forEach(i=>p.appendChild(makeCard(i.name,i.url)));
+}
+
+function renderAll(){
+  render('pane-games',GAMES);
+  render('pane-websites',WEBSITES);
+  render('pane-pr0x',PR0X);
+  render('pane-movies',[...GAMES,...MOVIES]);
+}
+
+function showTab(tab){
+  document.querySelectorAll('[id^="pane"]').forEach(p=>p.classList.add('hidden'));
+  document.getElementById('pane-'+tab).classList.remove('hidden');
+}
+
+document.querySelectorAll('[data-tab]').forEach(b=>{
+  b.onclick=()=>showTab(b.dataset.tab);
+});
+
+document.getElementById('startBtn').onclick=()=>{
+  landing.classList.add('hidden');
+  library.classList.remove('hidden');
+};
+
+const saved=localStorage.getItem('theme')||'classlink';
+document.documentElement.setAttribute('data-theme',saved);
+themeSelect.value=saved;
+themeSelect.onchange=e=>{
+  document.documentElement.setAttribute('data-theme',e.target.value);
+  localStorage.setItem('theme',e.target.value);
+};
+
+renderAll();
+</script>
+
+</body>
+</html>
